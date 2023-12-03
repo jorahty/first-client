@@ -1,1 +1,1 @@
-const String socketUri = "https://toolmaxsep2023.jorahty.repl.co";
+const String socketUri = "http://138.197.216.1:7202";
