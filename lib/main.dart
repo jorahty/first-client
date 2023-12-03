@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:toolmax/pages/home/page.dart';
 
@@ -15,9 +16,13 @@ class MainApp extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData(
+        fontFamily: GoogleFonts.inter(fontWeight: FontWeight.w600).fontFamily,
+        brightness: Brightness.dark,
+      ),
+      home: const HomePage(),
     );
   }
 }
