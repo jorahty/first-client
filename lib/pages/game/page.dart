@@ -5,26 +5,33 @@ import 'package:flame/game.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import 'socket/uri.dart';
 import 'canvas/canvas.dart';
 import 'controls/controls.dart';
 
 class GamePage extends StatelessWidget {
+  final String socketUri; // Add a parameter for socketUri
+
   const GamePage({
-    super.key,
-  });
+    Key? key,
+    required this.socketUri,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xff45406b),
-      body: GameBody(),
+    return Scaffold(
+      backgroundColor: const Color(0xff45406b),
+      body: GameBody(socketUri: socketUri), // Pass socketUri to GameBody
     );
   }
 }
 
 class GameBody extends StatefulWidget {
-  const GameBody({super.key});
+  final String socketUri; // Add a parameter for socketUri
+
+  const GameBody({
+    Key? key,
+    required this.socketUri,
+  }) : super(key: key);
 
   @override
   State<GameBody> createState() => _GameBodyState();
@@ -58,7 +65,7 @@ class _GameBodyState extends State<GameBody> {
     super.initState();
 
     _socket = IO.io(
-      socketUri,
+      widget.socketUri,
       IO.OptionBuilder().setTransports(['websocket']).build(),
     );
 

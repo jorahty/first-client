@@ -13,7 +13,9 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => const GamePage(),
+                builder: (BuildContext context) => const GamePage(
+                  socketUri: 'http://138.197.216.1:7202',
+                ),
               ),
             );
           },
