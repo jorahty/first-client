@@ -41,7 +41,7 @@ class _GameBodyState extends State<GameBody> {
   late IO.Socket _socket;
   late CanvasGame _game;
 
-  DateTime deadline = DateTime.now();
+  DateTime? deadline;
 
   showError() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -97,7 +97,7 @@ class _GameBodyState extends State<GameBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Countdown(deadline: deadline),
+        if (deadline != null) Countdown(deadline: deadline!),
         Expanded(
           child: ClipRect(
             child: GameWidget(
