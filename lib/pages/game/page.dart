@@ -115,17 +115,53 @@ class _GameBodyState extends State<GameBody> {
         ),
         Positioned(
           top: 0,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-              color: Color(0xff5a6984),
-            ),
-            child: Builder(builder: (context) {
-              return deadline != null
-                  ? Countdown(deadline: deadline!)
-                  : const SizedBox.shrink();
-            }),
+          child: Banner(deadline: deadline),
+        ),
+      ],
+    );
+  }
+}
+
+class Banner extends StatelessWidget {
+  const Banner({
+    super.key,
+    required this.deadline,
+  });
+
+  final DateTime? deadline;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          '2',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
+            color: Color(0xff49a581),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+            color: Color(0xff5a6984),
+          ),
+          child: Builder(builder: (context) {
+            return deadline != null
+                ? Countdown(deadline: deadline!)
+                : const SizedBox.shrink();
+          }),
+        ),
+        const SizedBox(width: 10),
+        const Text(
+          '3',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w800,
+            color: Color(0xff6f8ae4),
           ),
         ),
       ],
