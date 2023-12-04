@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flame/game.dart';
 
 // ignore: library_prefixes
@@ -7,6 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'canvas/canvas.dart';
 import 'controls/controls.dart';
+import 'package:toolmax/widgets/countdown.dart';
 
 class GamePage extends StatelessWidget {
   final String socketUri; // Add a parameter for socketUri
@@ -41,6 +41,8 @@ class _GameBodyState extends State<GameBody> {
   late IO.Socket _socket;
   late CanvasGame _game;
 
+  DateTime deadline = DateTime.now();
+
   showError() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -73,6 +75,12 @@ class _GameBodyState extends State<GameBody> {
     _socket.onError((msg) => showError());
     _socket.onConnect((_) => hideError());
 
+    _socket.on('deadline', (str) {
+      setState(() {
+        deadline = DateTime.parse(str);
+      });
+    });
+
     _game = CanvasGame(sendAngle: (angle) => _socket.emit('a', angle));
     _socket.on('move', _game.onMove);
     _socket.on('side', _game.assignSide);
@@ -89,6 +97,7 @@ class _GameBodyState extends State<GameBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Countdown(deadline: deadline),
         Expanded(
           child: ClipRect(
             child: GameWidget(
