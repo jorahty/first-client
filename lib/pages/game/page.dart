@@ -95,20 +95,32 @@ class _GameBodyState extends State<GameBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        if (deadline != null) Countdown(deadline: deadline!),
-        Expanded(
-          child: ClipRect(
-            child: GameWidget(
-              game: _game,
-              loadingBuilder: (context) => const Center(
-                child: CircularProgressIndicator(),
+        Column(
+          children: [
+            Expanded(
+              child: ClipRect(
+                child: GameWidget(
+                  game: _game,
+                  loadingBuilder: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               ),
             ),
-          ),
+            Controls(socket: _socket),
+          ],
         ),
-        Controls(socket: _socket),
+        Positioned(
+          top: 0,
+          child: Builder(builder: (context) {
+            return deadline != null
+                ? Countdown(deadline: deadline!)
+                : const SizedBox.shrink();
+          }),
+        ),
       ],
     );
   }
