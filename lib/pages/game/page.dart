@@ -115,11 +115,18 @@ class _GameBodyState extends State<GameBody> {
         ),
         Positioned(
           top: 0,
-          child: Builder(builder: (context) {
-            return deadline != null
-                ? Countdown(deadline: deadline!)
-                : const SizedBox.shrink();
-          }),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+              color: Color(0xff5a6984),
+            ),
+            child: Builder(builder: (context) {
+              return deadline != null
+                  ? Countdown(deadline: deadline!)
+                  : const SizedBox.shrink();
+            }),
+          ),
         ),
       ],
     );
