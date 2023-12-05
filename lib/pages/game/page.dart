@@ -41,7 +41,7 @@ class _GameBodyState extends State<GameBody> {
   late IO.Socket _socket;
   late CanvasGame _game;
 
-  DateTime? deadline;
+  DateTime? _deadline;
 
   showError() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +62,53 @@ class _GameBodyState extends State<GameBody> {
     ScaffoldMessenger.of(context).clearSnackBars();
   }
 
+  endMatch() {
+    _socket.disconnect();
+    setState(() => _deadline = null);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text(
+                'Match Ended!',
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 40,
+                ),
+              ),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: const Color(0xff6f8ae4)),
+                    padding: const EdgeInsets.all(15),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,9 +123,11 @@ class _GameBodyState extends State<GameBody> {
     _socket.onConnect((_) => hideError());
 
     _socket.on('deadline', (str) {
-      setState(() {
-        deadline = DateTime.parse(str);
-      });
+      final deadlinee = DateTime.parse(str);
+      setState(() => _deadline = deadlinee);
+      final timeUntilDeadline = deadlinee.difference(DateTime.now());
+      Future.delayed(timeUntilDeadline, endMatch);
+      endMatch();
     });
 
     _game = CanvasGame(sendAngle: (angle) => _socket.emit('a', angle));
@@ -115,7 +164,7 @@ class _GameBodyState extends State<GameBody> {
         ),
         Positioned(
           top: 0,
-          child: Banner(deadline: deadline),
+          child: Banner(deadline: _deadline),
         ),
       ],
     );
@@ -149,11 +198,7 @@ class Banner extends StatelessWidget {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
             color: Color(0xff5a6984),
           ),
-          child: Builder(builder: (context) {
-            return deadline != null
-                ? Countdown(deadline: deadline!)
-                : const SizedBox.shrink();
-          }),
+          child: Countdown(deadline: deadline),
         ),
         const SizedBox(width: 10),
         const Text(

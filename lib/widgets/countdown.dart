@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // Countdown(deadline: DateTime.parse('2023-12-04T04:29:34.396Z'))
 
 class Countdown extends StatefulWidget {
-  final DateTime deadline;
+  final DateTime? deadline;
 
   const Countdown({super.key, required this.deadline});
 
@@ -35,7 +35,9 @@ class _CountdownState extends State<Countdown> {
 
   void updateTimer() {
     setState(() {
-      remainingTime = widget.deadline.difference(DateTime.now());
+      remainingTime = widget.deadline != null
+          ? widget.deadline!.difference(DateTime.now())
+          : const Duration();
     });
   }
 
