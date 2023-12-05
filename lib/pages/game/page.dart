@@ -42,6 +42,8 @@ class _GameBodyState extends State<GameBody> {
   late CanvasGame _game;
 
   DateTime? _deadline;
+  int leftScore = 0;
+  int rightScore = 0;
 
   showError() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -66,6 +68,12 @@ class _GameBodyState extends State<GameBody> {
     _socket.disconnect();
     setState(() => _deadline = null);
 
+    late final String msg;
+
+    if (leftScore > rightScore) msg = 'Blue Wins!';
+    if (rightScore > leftScore) msg = 'Green Wins!';
+    if (rightScore == leftScore) msg = 'Draw!';
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -74,9 +82,9 @@ class _GameBodyState extends State<GameBody> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text(
-                'Match Ended!',
-                style: TextStyle(
+              Text(
+                msg,
+                style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 40,
                 ),
@@ -133,6 +141,18 @@ class _GameBodyState extends State<GameBody> {
     _game = CanvasGame(sendAngle: (angle) => _socket.emit('a', angle));
     _socket.on('move', _game.onMove);
     _socket.on('side', _game.assignSide);
+
+    _socket.on('goal', (side) {
+      if (side == 'left') {
+        setState(() {
+          rightScore = rightScore + 1;
+        });
+      } else {
+        setState(() {
+          leftScore = leftScore + 1;
+        });
+      }
+    });
   }
 
   @override
@@ -164,7 +184,11 @@ class _GameBodyState extends State<GameBody> {
         ),
         Positioned(
           top: 0,
-          child: Banner(deadline: _deadline),
+          child: Banner(
+            deadline: _deadline,
+            left: leftScore,
+            right: rightScore,
+          ),
         ),
       ],
     );
@@ -175,20 +199,24 @@ class Banner extends StatelessWidget {
   const Banner({
     super.key,
     required this.deadline,
+    required this.left,
+    required this.right,
   });
 
   final DateTime? deadline;
+  final int left;
+  final int right;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          '2',
-          style: TextStyle(
+        Text(
+          '$left',
+          style: const TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w800,
-            color: Color(0xff49a581),
+            color: Color(0xff6f8ae4),
           ),
         ),
         const SizedBox(width: 10),
@@ -201,12 +229,12 @@ class Banner extends StatelessWidget {
           child: Countdown(deadline: deadline),
         ),
         const SizedBox(width: 10),
-        const Text(
-          '3',
-          style: TextStyle(
+        Text(
+          '$right',
+          style: const TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w800,
-            color: Color(0xff6f8ae4),
+            color: Color(0xff49a581),
           ),
         ),
       ],
