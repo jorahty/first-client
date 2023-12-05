@@ -67,6 +67,7 @@ class _GameBodyState extends State<GameBody> {
     setState(() => _deadline = null);
 
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return Center(
