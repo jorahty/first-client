@@ -11,6 +11,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
 
   final void Function(String) sendAngle;
 
+  late String _side;
   late Ball ball;
   SpriteComponent? leftPlayer;
   SpriteComponent? rightPlayer;
@@ -42,7 +43,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
       size: rightPlayerSprite.srcSize,
       anchor: Anchor.center,
     );
-    myPlayer = leftPlayer;
+    myPlayer = (_side == 'left' ? leftPlayer : rightPlayer);
 
     world.addAll([Arena(), ball, leftPlayer!, rightPlayer!]);
   }
@@ -67,7 +68,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
   }
 
   void assignSide(side) {
-    myPlayer = (side == 'left' ? leftPlayer : rightPlayer);
+    _side = side;
   }
 
   @override
