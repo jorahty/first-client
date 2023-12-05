@@ -94,7 +94,7 @@ class _GameBodyState extends State<GameBody> {
                         color: const Color(0xff6f8ae4)),
                     padding: const EdgeInsets.all(15),
                     child: const Text(
-                      'Continue',
+                      'OK',
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 40,
@@ -128,7 +128,6 @@ class _GameBodyState extends State<GameBody> {
       setState(() => _deadline = deadlinee);
       final timeUntilDeadline = deadlinee.difference(DateTime.now());
       Future.delayed(timeUntilDeadline, endMatch);
-      endMatch();
     });
 
     _game = CanvasGame(sendAngle: (angle) => _socket.emit('a', angle));
