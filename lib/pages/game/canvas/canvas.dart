@@ -11,7 +11,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
 
   final void Function(String) sendAngle;
 
-  late String _side;
+  String? _side;
   late Ball ball;
   SpriteComponent? leftPlayer;
   SpriteComponent? rightPlayer;
@@ -69,6 +69,9 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
 
   void assignSide(side) {
     _side = side;
+    if (myPlayer != null) {
+      myPlayer = _side == 'left' ? leftPlayer : rightPlayer;
+    }
   }
 
   @override
