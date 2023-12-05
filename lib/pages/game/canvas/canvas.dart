@@ -28,19 +28,18 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
       ..viewfinder.zoom = 0.5;
     addAll([world, cameraComponent]);
 
-    final sprite = await loadSprite('flame.png');
+    final leftPlayerSprite = await loadSprite('leftPlayer.png');
+    final rightPlayerSprite = await loadSprite('rightPlayer.png');
 
     ball = Ball()..y = 1000;
     leftPlayer = SpriteComponent(
-      sprite: sprite,
-      position: size / 2,
-      size: sprite.srcSize * 2,
+      sprite: leftPlayerSprite,
+      size: leftPlayerSprite.srcSize,
       anchor: Anchor.center,
     );
     rightPlayer = SpriteComponent(
-      sprite: sprite,
-      position: size / 2,
-      size: sprite.srcSize * 2,
+      sprite: rightPlayerSprite,
+      size: rightPlayerSprite.srcSize,
       anchor: Anchor.center,
     );
     myPlayer = leftPlayer;
