@@ -9,7 +9,7 @@ import 'controls/controls.dart';
 import 'package:toolmax/widgets/countdown.dart';
 
 class GamePage extends StatelessWidget {
-  final String socketUri; // Add a parameter for socketUri
+  final String socketUri;
 
   const GamePage({
     Key? key,
@@ -20,13 +20,13 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff45406b),
-      body: GameBody(socketUri: socketUri), // Pass socketUri to GameBody
+      body: GameBody(socketUri: socketUri),
     );
   }
 }
 
 class GameBody extends StatefulWidget {
-  final String socketUri; // Add a parameter for socketUri
+  final String socketUri;
 
   const GameBody({
     Key? key,
