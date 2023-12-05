@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 
 import 'components/ball.dart';
-import 'components/player.dart';
 import 'components/arena.dart';
 
 class CanvasGame extends FlameGame with MouseMovementDetector {
@@ -13,9 +12,9 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
   final void Function(String) sendAngle;
 
   late Ball ball;
-  late Player leftPlayer;
-  late Player rightPlayer;
-  late Player myPlayer;
+  SpriteComponent? leftPlayer;
+  SpriteComponent? rightPlayer;
+  SpriteComponent? myPlayer;
   late CameraComponent cameraComponent;
 
   @override
@@ -29,21 +28,35 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
       ..viewfinder.zoom = 0.5;
     addAll([world, cameraComponent]);
 
+    final sprite = await loadSprite('flame.png');
+
     ball = Ball()..y = 1000;
-    leftPlayer = Player(color: const Color(0xff49a581))..y = 1000;
-    rightPlayer = Player(color: const Color(0xff6f8ae4))..y = 1000;
+    leftPlayer = SpriteComponent(
+      sprite: sprite,
+      position: size / 2,
+      size: sprite.srcSize * 2,
+      anchor: Anchor.center,
+    );
+    rightPlayer = SpriteComponent(
+      sprite: sprite,
+      position: size / 2,
+      size: sprite.srcSize * 2,
+      anchor: Anchor.center,
+    );
     myPlayer = leftPlayer;
 
-    world.addAll([Arena(), ball, leftPlayer, rightPlayer]);
+    world.addAll([Arena(), ball, leftPlayer!, rightPlayer!]);
   }
 
   void onMove(data) {
+    if (leftPlayer == null || rightPlayer == null) return;
+
     final poses = data.map((i) => i.toDouble()).toList();
 
-    leftPlayer.position.setValues(poses[0], poses[1]);
-    leftPlayer.angle = poses[2];
-    rightPlayer.position.setValues(poses[3], poses[4]);
-    rightPlayer.angle = poses[5];
+    leftPlayer!.position.setValues(poses[0], poses[1]);
+    leftPlayer!.angle = poses[2];
+    rightPlayer!.position.setValues(poses[3], poses[4]);
+    rightPlayer!.angle = poses[5];
     ball.position.setValues(poses[6], poses[7]);
     ball.angle = poses[8];
 
@@ -52,13 +65,6 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
         -cameraComponent.viewfinder.zoom;
     double current = cameraComponent.viewport.position.x;
     cameraComponent.viewport.position.x = current + (target - current) * 0.1;
-
-    // camera zoom
-    // final distance = myPlayer.position.distanceTo(ball.position);
-    // double targetZoom = -0.0001 * distance + 0.6;
-    // double currentZoom = cameraComponent.viewfinder.zoom;
-    // cameraComponent.viewfinder.zoom =
-    //     currentZoom + (targetZoom - currentZoom) * 0.1;
   }
 
   void assignSide(side) {
@@ -67,6 +73,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
 
   @override
   void onMouseMove(PointerHoverInfo info) {
+    if (myPlayer == null) return;
     final screenCenter = Vector2(
       -cameraComponent.viewport.position.x / cameraComponent.viewfinder.zoom,
       -cameraComponent.viewport.position.y / cameraComponent.viewfinder.zoom,
@@ -76,7 +83,7 @@ class CanvasGame extends FlameGame with MouseMovementDetector {
         canvasSize +
         info.eventPosition.game / cameraComponent.viewfinder.zoom;
 
-    final diff = inGameMousePosition - myPlayer.position;
+    final diff = inGameMousePosition - myPlayer!.position;
     final angle = diff.screenAngle();
 
     sendAngle(angle.toStringAsFixed(3));
