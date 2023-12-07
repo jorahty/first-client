@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   connect() {
     _socket = io.io(
-      'http://68.183.248.228:4000/',
+      'http://159.89.220.244:4000/',
       io.OptionBuilder().setTransports(['websocket']).build(),
     );
 
