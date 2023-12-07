@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-client
+spec:
+  selector:
+    matchLabels:
+      app: first-client
+  template:
+    metadata:
+      labels:
+        app: first-client
+    spec:
+      containers:
+        - name: first-client
+          image: jorahty/first-client:1.0
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '250m'
+          ports:
+            - containerPort: 80
