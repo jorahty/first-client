@@ -211,12 +211,15 @@ class Banner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          '$left',
-          style: const TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w800,
-            color: Color(0xff6f8ae4),
+        SafeArea(
+          bottom: false,
+          child: Text(
+            '$left',
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
+              color: Color(0xff6f8ae4),
+            ),
           ),
         ),
         const SizedBox(width: 10),
@@ -226,15 +229,18 @@ class Banner extends StatelessWidget {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
             color: Color(0xff5a6984),
           ),
-          child: Countdown(deadline: deadline),
+          child: SafeArea(bottom: false, child: Countdown(deadline: deadline)),
         ),
         const SizedBox(width: 10),
-        Text(
-          '$right',
-          style: const TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w800,
-            color: Color(0xff49a581),
+        SafeArea(
+          bottom: false,
+          child: Text(
+            '$right',
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w800,
+              color: Color(0xff49a581),
+            ),
           ),
         ),
       ],
